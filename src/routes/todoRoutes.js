@@ -172,6 +172,11 @@ router.delete("/:id", TodoController.deleteTodo);
  *           type: string
  *         description: Global search on title and description
  *       - in: query
+ *         name: _search_fields
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of fields to apply global search on (e.g., title,description)
+ *       - in: query
  *         name: title
  *         schema:
  *           type: string
@@ -181,6 +186,7 @@ router.delete("/:id", TodoController.deleteTodo);
  *         schema:
  *           type: string
  *         description: Filter by description
+ * 
  *     responses:
  *       200:
  *         description: List of todos

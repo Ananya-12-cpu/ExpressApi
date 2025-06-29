@@ -1,6 +1,7 @@
 const { Sequelize } = require("sequelize");
 const User = require("../models/User");
 const Todo = require("../models/Todo");
+const { Op } = require("sequelize");
 
 var addTodo = async (req, res) => {
   try {
@@ -23,9 +24,26 @@ var getTodos = async (req, res) => {
     }
 
     // Global search
-    const { Op } = require("sequelize");
+
     let globalSearch = null;
-    if (req.query._search) {
+
+    if (req.query._search && req.query._search_fields) {
+      // if _search_fields , _search exists in Global search
+      const searchTerm = req.query._search; 
+      const fields = req.query._search_fields
+        .split(",")
+        .map((field) => field?.trim())
+        // .filter((field) => field?.length > 0); // optional: removes empty strings
+
+      // Build dynamic OR conditions for each requested field
+      globalSearch = {
+        [Op.or]: fields.map((field) => ({
+          [field]: { [Op.like]: `%${searchTerm}%` },
+        })),
+      };
+    } else if (req.query._search && !req.query._search_fields) {
+      // if only _search exists in Global search
+
       const searchTerm = req.query._search;
       globalSearch = {
         [Op.or]: [
@@ -99,8 +117,6 @@ var getTodos = async (req, res) => {
 
 var getPostWithUser = async (req, res) => {
   try {
-    console.log(req.params.id);
-
     const todo = await Todo.findOne({
       where: {
         id: req.params.id,

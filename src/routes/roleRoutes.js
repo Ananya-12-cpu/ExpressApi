@@ -69,6 +69,11 @@ router.post("/add", roleController.createRole);
  *         schema:
  *           type: string
  *         description: Global search on name and description
+ *       - in: query
+ *         name: _search_fields
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of fields to apply global search on (e.g., name,description)
  *     responses:
  *       200:
  *         description: List of roles

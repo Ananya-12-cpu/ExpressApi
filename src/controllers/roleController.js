@@ -25,16 +25,53 @@ const createRole = async (req, res) => {
 const getRoles = async (req, res) => {
     try {
         // Global search
-        let globalSearch = null;
-        if (req.query._search) {
-            const searchTerm = req.query._search;
-            globalSearch = {
-                [Op.or]: [
-                    { name: { [Op.like]: `%${searchTerm}%` } },
-                    { description: { [Op.like]: `%${searchTerm}%` } },
-                ],
-            };
-        }
+
+  let globalSearch = null;
+
+    if (req.query._search && req.query._search_fields) {
+      // if _search_fields , _search exists in Global search
+      const searchTerm = req.query._search;
+      const fields = req.query._search_fields
+        .split(",")
+        .map((field) => field?.trim());
+      // .filter((field) => field?.length > 0); // optional: removes empty strings
+
+      // Build dynamic OR conditions for each requested field
+      globalSearch = {
+        [Op.or]: fields.map((field) => ({
+          [field]: { [Op.like]: `%${searchTerm}%` },
+        })),
+      };
+    } else if (req.query._search && !req.query._search_fields) {
+      // if only _search exists in Global search
+
+      const searchTerm = req.query._search;
+      globalSearch = {
+        [Op.or]: [
+          { name: { [Op.like]: `%${searchTerm}%` } },
+          { description: { [Op.like]: `%${searchTerm}%` } },
+        ],
+      };
+    }
+
+
+
+
+
+
+
+
+
+        // let globalSearch = null;
+        // if (req.query._search) {
+        //     const searchTerm = req.query._search;
+        //     globalSearch = {
+        //         [Op.or]: [
+        //             { name: { [Op.like]: `%${searchTerm}%` } },
+        //             { description: { [Op.like]: `%${searchTerm}%` } },
+        //         ],
+        //     };
+        // }
 
         // Pagination parameters
         const page = parseInt(req.query._page) || 1;
