@@ -12,6 +12,8 @@ http://localhost:3000/api/users?_page=1&_limit=3&name=name 1    (pagination with
 
 'http://localhost:3000/api/users?_search=name%207&_search_fields=name%2Cemail  ( global search with dynamic search field )
 
+http://localhost:3000/api/users?_show_fields=name%2Cemail     ( dynamic fetch fields )
+
 
 http://localhost:3000/api/users (without query parameter)
 
@@ -38,6 +40,9 @@ http://localhost:3000/api/todos?_page=1&_limit=3&title=todo 7  (pagination with 
 
 http://localhost:3000/api/todos?search=todo 2  ( global search )
 http://localhost:3000/api/todos?_search=re&_search_fields=title%20%2C%20description ( global search with dynamic search field)
+
+http://localhost:3000/api/todos?_show_fields=name%2Cdescription     ( dynamic fetch fields )
+
 
 swagger api link
 http://localhost:3000/api-docs/

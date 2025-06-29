@@ -177,6 +177,11 @@ router.delete("/:id", TodoController.deleteTodo);
  *           type: string
  *         description: Comma-separated list of fields to apply global search on (e.g., title,description)
  *       - in: query
+ *         name: _show_fields
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of fields to apply dynamic fetch fields on (e.g., name,description)
+ *       - in: query
  *         name: title
  *         schema:
  *           type: string

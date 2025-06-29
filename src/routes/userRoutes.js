@@ -173,6 +173,11 @@ router.delete("/:id", userController.deleteUser);
  *           type: string
  *         description: Comma-separated list of fields to apply global search on (e.g., name,email)
  *       - in: query
+ *         name: _show_fields
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of fields to apply dynamic fetch fields on (e.g., name,email)
+ *       - in: query
  *         name: name
  *         schema:
  *           type: string

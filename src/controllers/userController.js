@@ -26,14 +26,14 @@ var getUsers = async (req, res) => {
     // Global search
 
     let globalSearch = null;
-
+    let attributes = undefined;
+    
     if (req.query._search && req.query._search_fields) {
       // if _search_fields , _search exists in Global search
       const searchTerm = req.query._search;
       const fields = req.query._search_fields
         .split(",")
-        .map((field) => field?.trim());
-      // .filter((field) => field?.length > 0); // optional: removes empty strings
+        .map((field) => field?.trim()); // optional: removes empty strings
 
       // Build dynamic OR conditions for each requested field
       globalSearch = {
@@ -51,18 +51,12 @@ var getUsers = async (req, res) => {
           { email: { [Op.like]: `%${searchTerm}%` } },
         ],
       };
+    } else if (req.query._show_fields) {
+      attributes = req.query._show_fields
+        .split(",")
+        .map((field) => field.trim())
+        // .filter((field) => field.length > 0);
     }
-
-    // let globalSearch = null;
-    // if (req.query._search) {
-    //   const searchTerm = req.query._search;
-    //   globalSearch = {
-    //     [Op.or]: [
-    //       { name: { [Op.like]: `%${searchTerm}%` } },
-    //       { email: { [Op.like]: `%${searchTerm}%` } },
-    //     ],
-    //   };
-    // }
 
     // Combine filters and global search
     const whereCondition = globalSearch
@@ -80,6 +74,7 @@ var getUsers = async (req, res) => {
 
     // Find users with filters
     const users = await User.findAll({
+      attributes: attributes || undefined, // only include if provided
       where: whereCondition,
       limit: limit,
       offset: offset,
@@ -116,7 +111,6 @@ var getUsers = async (req, res) => {
 // // /users/1/posts
 
 var getUserCreatedPost = async (req, res) => {
-
   // Sorting parameters for todos
   const sortBy = req.query.sortBy || "createdAt";
   const sortOrder = req.query.sortOrder === "DESC" ? "DESC" : "ASC";

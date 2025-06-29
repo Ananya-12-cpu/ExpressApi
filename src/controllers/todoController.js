@@ -26,6 +26,9 @@ var getTodos = async (req, res) => {
     // Global search
 
     let globalSearch = null;
+    let attributes = undefined;
+
+
 
     if (req.query._search && req.query._search_fields) {
       // if _search_fields , _search exists in Global search
@@ -52,6 +55,15 @@ var getTodos = async (req, res) => {
         ],
       };
     }
+    
+    // dynamic fetch fields
+    
+    if (req.query._show_fields) {
+      attributes = req.query._show_fields
+        .split(",")
+        .map((field) => field.trim())
+        // .filter((field) => field.length > 0);
+    }
 
     // Combine filters and global search
     const whereCondition = globalSearch
@@ -70,6 +82,7 @@ var getTodos = async (req, res) => {
     // Get paginated data
     const todos = await Todo.findAll({
       where: whereCondition,
+      attributes:attributes || undefined,
       include: [
         {
           model: User,
