@@ -25,8 +25,8 @@ var getTodos = async (req, res) => {
     // Global search
     const { Op } = require("sequelize");
     let globalSearch = null;
-    if (req.query.search) {
-      const searchTerm = req.query.search;
+    if (req.query._search) {
+      const searchTerm = req.query._search;
       globalSearch = {
         [Op.or]: [
           { title: { [Op.like]: `%${searchTerm}%` } },
@@ -41,13 +41,13 @@ var getTodos = async (req, res) => {
       : filters;
 
     // Pagination parameters
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const page = parseInt(req.query._page) || 1;
+    const limit = parseInt(req.query._limit) || 5;
     const offset = (page - 1) * limit;
 
     // Sorting parameters
-    const sortBy = req.query.sortBy || "createdAt";
-    const sortOrder = req.query.sortOrder === "DESC" ? "DESC" : "ASC";
+    const sortBy = req.query._sort_by || "createdAt";
+    const sortOrder = req.query._sort_order === "DESC" ? "DESC" : "ASC";
 
     // Get paginated data
     const todos = await Todo.findAll({

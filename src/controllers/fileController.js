@@ -110,8 +110,8 @@ const uploadFile = async (req, res) => {
 // Get all files (with pagination)
 const getAllFiles = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query._page) || 1;
+    const limit = parseInt(req.query._limit) || 10;
     const offset = (page - 1) * limit;
 
     // First, let's test without the include to see if the basic query works
@@ -142,8 +142,8 @@ const getAllFiles = async (req, res) => {
 const getFilesByUser = async (req, res) => {
   try {
     const userId = req.params.userId || req.user.id;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query._page) || 1;
+    const limit = parseInt(req.query._limit) || 10;
     const offset = (page - 1) * limit;
 
     const { count, rows: files } = await File.findAndCountAll({
